@@ -10,10 +10,10 @@ Starting Program
 ![Schematic](/Assets/Startup.png)
 
 Running : button not pressed yet
-![Sim with Button unpressed](/Assets/bPressed.png)
+![Sim with Button unpressed](/Assets/bUnPressed.png)
 
 Running : button pressed
-![Sim with Button pressed](/Assets/bUnPressed.png)
+![Sim with Button pressed](/Assets/bPressed.png)
 
 ## To-Do
 
