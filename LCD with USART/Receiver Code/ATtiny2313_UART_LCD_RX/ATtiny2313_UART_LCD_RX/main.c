@@ -122,7 +122,7 @@ void Prom_EEPROM_read(unsigned int StartAdress, char *EEPROM_Data, unsigned int 
     for(i=0; i<Length; i++)
     {   // loop through all bits in data
         EEPROM_Data[i] = EEPROM_read(StartAdress+i);  //Read from EEPROM
-		 _delay_us(10);
+		_delay_us(10);
     }
 }
 
@@ -140,9 +140,9 @@ void LCD_Enable(unsigned int EN)
 	else if(EN == 2){
 		// Enable last two lines for display when 2 is passed in
 	
-		 PORTD |= (1<<EN2);  // logic 1 on enable 2 pin
-		 _delay_ms(1);       // short delay
-		 PORTD &= ~(1<<EN2); // logic 0 on enable 2 pin
+		PORTD |= (1<<EN2);  // logic 1 on enable 2 pin
+		_delay_ms(1);       // short delay
+		PORTD &= ~(1<<EN2); // logic 0 on enable 2 pin
 	}
 	_delay_ms(1); 
 }
@@ -243,11 +243,12 @@ void LCD_mes(){
 
 // Function for receiving data from the serial port
 void ReceiveUARTData(){
-	// when RXC is SET then USART Receive Complete
+	// when RXC is SET, then USART Receive data is Complete
 
 	//check for parity error
 	if ((UCSRA&(1<<UPE)))       // CHECK FOR ERROR FLAG
 	{ 
+		// We have an error in the received data
 		Parity = 2;            // trigger parity error led to blink in switch case statement
 		UCSRA = (0 << UPE);    // reset flag
 		index_ = 0;            //reset index
@@ -256,13 +257,13 @@ void ReceiveUARTData(){
 
      // Theres no parity error so read the data
 	 Parity = 1; 			  // set parity error led to "PARITY OKAY"
-	char receivedByte = UDR;  // UDR is will "read" from the RX pin 
+	char receivedByte = UDR;  // UDR will "read" from the RX pin 
 	_delay_ms(5);
 	 
 	
 	if(receivedByte != '0' && index_ < 5){
-        Received_data[index_] = receivedByte;
-        index_++;              // Add 1 to the index position
+        Received_data[index_] = receivedByte;   // append received data to array
+        index_++;             					 // Add 1 to the index position
     } else {
 
         // data reveived, parity okay: checking for keyword "PRINT" 
@@ -289,7 +290,7 @@ void ReceiveUARTData(){
             //loop through read data and print to LCD
             for (int i=0; i <32; i++) {  
                 LCD_SEND_DATA(Read_Data[i], 1);
-				if (i == 14) LCD_SEND_CMD(0xC0, 1);     // 2nd line for registration number
+				if (i == 14) LCD_SEND_CMD(0xC0, 1);     // 2nd line data
                 _delay_us(100);
             }
 		    _delay_ms(1000);        
@@ -358,8 +359,8 @@ int main(void)
 	    // I didnt use RX interrupt functionality -- use it for more efficient code
         // this was just to avoid using interrupt library
 
-        //Check register if USART data is available
-		if ((UCSRA&(1<<RXC)))       // If data has been received fetch and check keyword
+        //Check RXC register if USART data is available
+		if ((UCSRA&(1<<RXC)))       // If data has been received ; fetch and check keyword
 		{ 
 			ReceiveUARTData();  // Function to receive data from the serial port
 		}
