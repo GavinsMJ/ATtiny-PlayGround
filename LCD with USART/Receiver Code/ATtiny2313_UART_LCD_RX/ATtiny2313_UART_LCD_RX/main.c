@@ -353,7 +353,7 @@ int main(void)
 
         }  
 		
-		// Uncomment below for scroll funct 
+		// comment out the line below to disable scroll functionality
         LCD_SEND_CMD(0x1c, 1);
 		
 	    // I didnt use RX interrupt functionality -- use it for more efficient code
